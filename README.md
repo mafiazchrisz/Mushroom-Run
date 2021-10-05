@@ -1,5 +1,5 @@
-# mini2Dx-sample-tappy-bird
-Flappy Bird clone implemented in mini2Dx
+# mini2Dx-mushroom-run
+Inspiration by Dino-chrome and implemented in mini2Dx
 
 - Viewport rendering
 - Sprite position interpolation using CollisionBox
