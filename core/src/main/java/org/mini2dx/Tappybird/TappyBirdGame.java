@@ -23,15 +23,17 @@ import org.mini2Dx.core.graphics.viewport.FitViewport;
 import org.mini2Dx.core.graphics.viewport.Viewport;
 import java.util.Random;
 import static org.mini2dx.Tappybird.Sounds.playPillarPassSound;
-
+import static org.mini2dx.Tappybird.Sounds.jumpSound;
+import static org.mini2dx.Tappybird.Sounds.deadSound;
 
 public class TappyBirdGame extends BasicGame {
     public static final String GAME_IDENTIFIER = "org.mini2Dx.TappyBird";
-
     public static float GRAVITY;
     public static float FLYING_SPEED;
-    public static final float GAME_WIDTH = 800; // Default = 800
-    public static final float GAME_HEIGHT = 500; // Default = 500
+    public static final float GAME_WIDTH = 800;
+    public static final float GAME_HEIGHT = 500;
+    public static int giftMove, giftPosition, separateGift = 10;
+    private static boolean isGiftOccur = false, isImmortal = false;
 
     //These variables change how it feels to play the game.
     private static float GAME_GRAVITY = 0.6f;
@@ -39,23 +41,22 @@ public class TappyBirdGame extends BasicGame {
     private static boolean IS_ROTATING = false;
     private static boolean IS_TESTING = false;
     private static int MAX_PILLARS = 8;
-    private static int PILLAR_TIMING = 70;  //Lower will increase the frequency of pillars.
-    private static float PILLAR_Y_MIN = -300f; // Default = -150f
-    private static float PILLAR_Y_MAX = 0f;
+    public static int PILLAR_TIMING = 100;  //Lower will increase the frequency of pillars.
+    private static float PILLAR_Y_MIN = -100f;
+    private static float PILLAR_Y_MAX = -75f;
     private static float PILLAR_GAP_MIN = 175f;
     private static float PILLAR_GAP_MAX = 250f;
-    // private static float HEALTH_POINT = 3; // HP in-game
 
     //Game states and player score
-    private boolean inGame, isDead;
+    public static boolean inGame, isDead, isSkillStart = false;
     private static int playerScore, highScore;
-    private int countDead;
+    private int countDead, Collisionfield, choice, skillTime;
 
     Viewport fitViewport;
     InputHandler inputHandler;
     Player player;
     PlayerTexture playerTexture;
-    TopBottomEdge ground1, ground2;
+    TopBottomEdge ground1, ground2, upperRight;
     TopBottomEdgeTexture topBottomEdgeTexture;
     Background background1, background2;
     BackgroundTexture backgroundTexture;
@@ -83,7 +84,10 @@ public class TappyBirdGame extends BasicGame {
         collisionRectanglesBottom = new CollisionBox[MAX_PILLARS];
         collisionRectanglesTop = new CollisionBox[MAX_PILLARS];
 
-        playerTexture = new PlayerTexture();
+        playerTexture = new PlayerTexture(4);  // input 1 for red
+        // input 2 for yellow
+        // input 3 for blue
+        // input 4 for green
         backgroundTexture = new BackgroundTexture();
         pillarTexture = new PillarTexture();
         topBottomEdgeTexture = new TopBottomEdgeTexture();
@@ -96,6 +100,7 @@ public class TappyBirdGame extends BasicGame {
         player = new Player(playerTexture, IS_ROTATING, IS_TESTING);
         ground1 = new TopBottomEdge(topBottomEdgeTexture);
         ground2 = new TopBottomEdge(topBottomEdgeTexture);
+        upperRight = new TopBottomEdge(topBottomEdgeTexture);
         ground2.generateHazardAtPos(GAME_WIDTH, GAME_HEIGHT - ground1.getGroundTextureHeight());
         background1 = new Background(backgroundTexture);
         background2 = new Background(backgroundTexture);
@@ -129,7 +134,6 @@ public class TappyBirdGame extends BasicGame {
                 inGame = true;
             }
 
-
             if (inGame && pillarTiming < 0) {
                 pillarTiming = PILLAR_TIMING;
                 pillars[pillarIndexTail] = new Pillars(pillarTexture, IS_ROTATING);
@@ -161,8 +165,14 @@ public class TappyBirdGame extends BasicGame {
             if (player.getPlayerY() < 0 || player.getPlayerY() > GAME_HEIGHT - player.getPlayerTextureHeight()) {
                 setDead();
             }
+            if (getScore()==0){ // Set heart in game start
+                choice = 0;
+            }
 
             checkCollisions();
+            increaseSpeed();
+            giftOccur();
+            skill();
         }
     }
 
@@ -182,7 +192,7 @@ public class TappyBirdGame extends BasicGame {
 
         ground1.render(g);
         ground2.render(g);
-
+        upperRight.setWhichHeart(choice, g);
         userInterface.displayScore(g, playerScore);
 
         if (!inGame) {
@@ -198,27 +208,30 @@ public class TappyBirdGame extends BasicGame {
     float randomFloatMinMax(float min, float max) {
         float leftLimit = min;
         float rightLimit = max;
-        return leftLimit + new Random().nextFloat() * (rightLimit - leftLimit);
+
+        if(new Random().nextBoolean()) return leftLimit;
+        else return rightLimit;
+        //return leftLimit + new Random().nextFloat() * (rightLimit - leftLimit);
     }
 
     void checkCollisions() {
         for (int i = 0; i < MAX_PILLARS; i++) {
-            if (collisionRectanglesBottom[i] != null) {
+            if (collisionRectanglesBottom[i] != null && !isImmortal) {
                 if (player.playerCollisionBox.intersects(collisionRectanglesBottom[i])) {
                     setHeart();
                 }
             }
-            if (collisionRectanglesTop[i] != null) {
-                if (player.playerCollisionBox.intersects(collisionRectanglesTop[i])) {
-                    setHeart();
-                }
-            }
+//            if (collisionRectanglesTop[i] != null) {
+//                if (player.playerCollisionBox.intersects(collisionRectanglesTop[i])) {
+//                    setHeart();
+//                }
+//            }
         }
     }
 
     public static void setScore(int score) {
         playerScore = score;
-        if(getScore() % 10 == 0){
+        if(getScore() % 100 == 0){
             playPillarPassSound();
         }
     }
@@ -228,27 +241,68 @@ public class TappyBirdGame extends BasicGame {
     }
 
     public static void increaseSpeed(){
-        // Whenever score is up to 10, 30, 60 increase a speed
-//        if(getScore()>=10) FLYING_SPEED += 0.01f;
-//        else if(getScore()>=30) FLYING_SPEED += 0.01f;
-//        else if(getScore()>=60) FLYING_SPEED += 0.01f;
-        if(getScore() % 20 == 0){
-            FLYING_SPEED += 0.05f;
+        if(getScore() % 100 == 0 && getScore() != 0){ // Speed increase every 100 score of entire game
+            FLYING_SPEED += 0.1f;
         }
     }
-
-    void setHeart(){
-        // Collision for 3 time to be dead
-        if(countDead==36) {
-            setDead();
+    public static void giftOccur(){
+        if(isGiftOccur) giftMove++;
+        if(getScore() == separateGift){
+            separateGift = getScore();
+            isGiftOccur = true;
+            switch (new Random().nextInt() % 3) { // Random gift position height
+                case 0:
+                    giftPosition = 320;
+                    break;
+                case 1:
+                    giftPosition = 200;
+                    break;
+                case 2:
+                    giftPosition = 120;
+                    break;
+            }
+            if(separateGift==10) giftPosition = 320;
+            separateGift += whenGiftOccur(); // When gift occur again in soon
+            giftMove = 0; // Stop move gift
         }
-        countDead++;
+        if(giftMove*6==850){
+            giftMove = 0;
+            isGiftOccur = false;
+        }
+    }
+    private static int whenGiftOccur() {
+        return new Random().nextInt() % 10 + 60;
+    }
+    void setHeart(){
+        if(Collisionfield==12) {
+            countDead++;
+            Collisionfield = 0;
+            choice++;
+        }else if(countDead == 2){
+            setDead();
+            countDead = 0;
+        }
+        Collisionfield++;
     }
 
     void setDead() {
         isDead = true;
         FLYING_SPEED = 0f;
         GRAVITY = 0f;
-        gameSounds.playRandomExplosionSound();
+        deadSound();
+        //gameSounds.playRandomExplosionSound();
+    }
+    public void skill(){
+        if(giftMove==125 && (Player.getPlayerY()+40>giftPosition && Player.getPlayerY()-40<giftPosition) ) {
+            FLYING_SPEED += 8f;
+            isImmortal = true;
+            isSkillStart = true;
+        }else if(skillTime==200) {
+            FLYING_SPEED -= 8f;
+            isImmortal = false;
+            skillTime = 0;
+            isSkillStart = false;
+        }
+        if(isSkillStart) skillTime++;
     }
 }

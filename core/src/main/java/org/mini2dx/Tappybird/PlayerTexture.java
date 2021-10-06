@@ -32,11 +32,22 @@ public class PlayerTexture {
     Animation playerAnimation = new Animation();
 
 
-    public PlayerTexture(){
-        playerAnimation.addFrame(playerSpriteSheet.getSprite(1),frameDuration);
-        playerAnimation.addFrame(playerSpriteSheet.getSprite(9),frameDuration);
-        playerAnimation.addFrame(playerSpriteSheet.getSprite(12),frameDuration);
-        playerAnimation.addFrame(playerSpriteSheet.getSprite(9),frameDuration);
+    public PlayerTexture(int color){
+        int red[] = {1, 9, 12};
+        int yellow[] = {0, 2, 10};
+        int green[] = {3, 5, 7};
+        int blue[] = {4, 6, 8};
+        int stored[] = {0, 0, 0};
+        for(int i=0;i<3;i++) {
+            if (color == 1) stored[i] = red[i];
+            else if (color == 2) stored[i] = yellow[i];
+            else if (color == 3) stored[i] = blue[i];
+            else if (color == 4) stored[i] = green[i];
+        }
+        playerAnimation.addFrame(playerSpriteSheet.getSprite(stored[0]), frameDuration);
+        playerAnimation.addFrame(playerSpriteSheet.getSprite(stored[1]), frameDuration);
+        playerAnimation.addFrame(playerSpriteSheet.getSprite(stored[2]), frameDuration);
+        playerAnimation.addFrame(playerSpriteSheet.getSprite(stored[1]), frameDuration);
     }
 
 }

@@ -22,8 +22,16 @@ import org.mini2Dx.core.graphics.Texture;
 public class TopBottomEdgeTexture {
 
     private static final String GROUND_TEXTURE_LOCATION = "platform01.png";
+    public static final String GIFT1_TEXTURE_LOCATION = "gift1.png";
+    public static final String HEART_FULL_TEXTURE_LOCATION = "heartFull.png";
+    public static final String HEART_HALF_TEXTURE_LOCATION = "heartHalf.png";
+    public static final String HEART_LOST_TEXTURE_LOCATION = "heartLost.png";
     // private static final String CEILING_TEXTURE_LOCATION = "ceilingDirt.png";
 
     Texture groundTexture = Mdx.graphics.newTexture(Mdx.files.internal(GROUND_TEXTURE_LOCATION));
+    Texture heartF = Mdx.graphics.newTexture(Mdx.files.internal(HEART_FULL_TEXTURE_LOCATION));
+    Texture heartH = Mdx.graphics.newTexture(Mdx.files.internal(HEART_HALF_TEXTURE_LOCATION));
+    Texture heartL = Mdx.graphics.newTexture(Mdx.files.internal(HEART_LOST_TEXTURE_LOCATION));
+    Texture gift = Mdx.graphics.newTexture(Mdx.files.internal(GIFT1_TEXTURE_LOCATION));
     // Texture ceilingTexture = Mdx.graphics.newTexture(Mdx.files.internal(CEILING_TEXTURE_LOCATION));
 }

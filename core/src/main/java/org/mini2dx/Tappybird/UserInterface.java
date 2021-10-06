@@ -35,8 +35,8 @@ public class UserInterface {
     Integer[] digits;
 
     private int numberWidth = 53;
-    private int highscoreY = 70;
-    private int messageY = (int)(GAME_HEIGHT - 110);
+    private int highscoreY = 35;
+    private int messageY = (int)(GAME_HEIGHT - 90);
 
     public UserInterface(UserInterfaceTexture userInterfaceTexture){
 
@@ -74,7 +74,7 @@ public class UserInterface {
         digits = intToIntArrayByDigits(tempScore);
 
         for(int i = 0; i<digits.length; i++){
-            g.drawTexture(numberTextures[digits[i]],i*numberWidth,0);
+            g.drawTexture(numberTextures[digits[i]],i*numberWidth,25);
         }
     }
 

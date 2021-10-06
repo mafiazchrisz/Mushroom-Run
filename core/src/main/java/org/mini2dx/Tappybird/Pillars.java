@@ -27,7 +27,7 @@ public class Pillars extends Hazards {
 
     private boolean isRotating;
     private boolean hasBeenCalled = false;
-    private boolean counted = false;
+   //private boolean counted = false;
 
     float hazardYGap;
     float pillarHeight;
@@ -56,13 +56,15 @@ public class Pillars extends Hazards {
         super.generateHazardAtPos(xPos, yPos);
         hazardYGap = gap;
         if (isRotating) {
-//            collisionRectTop = generatePillarCollisionRectAt(xPos + halfPillarWidth - pillarWidth / 8, yPos);
-//            collisionRectTop.setRotationAround(collisionRectTop.getCenterX(), collisionRectTop.getCenterY(), -10);
+//          collisionRectTop = generatePillarCollisionRectAt(xPos + halfPillarWidth - pillarWidth / 8, yPos);
+//          collisionRectTop.setRotationAround(collisionRectTop.getCenterX(), collisionRectTop.getCenterY(), -10);
+
             collisionRectBottom = generatePillarCollisionRectAt(xPos + halfPillarWidth - pillarWidth / 8, yPos + gap + pillarHeight);
             collisionRectBottom.setRotationAround(collisionRectBottom.getCenterX(), collisionRectBottom.getCenterY(), 10);
         } else {
 //            collisionRectTop = generatePillarCollisionRectAt(xPos + halfPillarWidth + collisionRectWidth/2, yPos);
             collisionRectBottom = generatePillarCollisionRectAt(xPos + halfPillarWidth + collisionRectWidth/2, yPos + gap + pillarHeight);
+
         }
     }
 
@@ -96,11 +98,10 @@ public class Pillars extends Hazards {
             collisionRectBottom.moveTowards(-100, collisionRectBottom.getY(), speed);
         }
 
-        if(!counted && getHazardXPos()<PLAYER_X){
-            TappyBirdGame.setScore(TappyBirdGame.getScore()+1);
-            counted = true;
-        }
-        TappyBirdGame.increaseSpeed();
+//        if(!counted && getHazardXPos()<PLAYER_X){
+//            TappyBirdGame.setScore(TappyBirdGame.getScore()+1);
+//            counted = true;
+//        }
     }
 
     void render(Graphics g, boolean isTesting) {

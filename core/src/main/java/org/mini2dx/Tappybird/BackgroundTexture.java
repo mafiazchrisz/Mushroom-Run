@@ -21,7 +21,7 @@ import org.mini2Dx.core.graphics.Texture;
 
 public class BackgroundTexture {
 
-    private static final String BACKGROUND_TEXTURE_LOCATION = "background.png";
+    private static final String BACKGROUND_TEXTURE_LOCATION = "background2.jpg";
 
     Texture background = Mdx.graphics.newTexture(Mdx.files.internal(BACKGROUND_TEXTURE_LOCATION));
 }

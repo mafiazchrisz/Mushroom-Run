@@ -32,11 +32,35 @@ public class Sounds{
     private static final String EXPLOSION_4_SOUND_LOCATION = "Sounds/explosion4.ogg";
     private static final String EXPLOSION_5_SOUND_LOCATION = "Sounds/explosion5.ogg";
     private static final String BACKGROUND_MUSIC_LOCATION = "Sounds/Cheerful Annoyance_v2.wav";
+    private static final String JUMP_SOUND = "Sounds/jump.wav";
+    private static final String DEAD_SOUND = "Sounds/dead.wav";
 
     static long PILLAR_PASS_SOUND_ID;
     static Sound pillarPassSound;
 
-    static {
+    static long JUMP_ID;
+    static Sound jump;
+
+    static long DEAD_ID;
+    static Sound dead;
+
+    static{
+        try{
+            dead = Mdx.audio.newSound(Mdx.files.internal(DEAD_SOUND));
+        } catch (IOException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    static{ // Jump Sound
+        try{
+          jump = Mdx.audio.newSound(Mdx.files.internal(JUMP_SOUND));
+        } catch (IOException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    static { // Pass pillar sound
         try {
             pillarPassSound = Mdx.audio.newSound(Mdx.files.internal(PILLAR_PASS_SOUND_LOCATION));
         } catch (IOException e) {
@@ -44,11 +68,10 @@ public class Sounds{
         }
     }
 
-
     Music backgroundMusic;
 
     {
-        try {
+        try { // BG Music
             backgroundMusic = Mdx.audio.newMusic(Mdx.files.internal(BACKGROUND_MUSIC_LOCATION));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -69,13 +92,17 @@ public class Sounds{
         }
     }
 
-    void loopBackgroundMusic(){
-        backgroundMusic.setVolume(0.25f);
-        if(!backgroundMusic.isLooping()){
-            backgroundMusic.play();
-        }
-        backgroundMusic.setLooping(true);
-    }
+//    void loopBackgroundMusic(){
+//        backgroundMusic.setVolume(0.25f);
+//        if(!backgroundMusic.isLooping()){
+//            backgroundMusic.play();
+//        }
+//        backgroundMusic.setLooping(true);
+//    }
+
+    static void deadSound() {DEAD_ID = dead.play(3f);} // Dead Sound
+
+    static void jumpSound() {JUMP_ID = jump.play(3f); } // Jump Sound
 
     static void playPillarPassSound(){
         PILLAR_PASS_SOUND_ID = pillarPassSound.play(1f);

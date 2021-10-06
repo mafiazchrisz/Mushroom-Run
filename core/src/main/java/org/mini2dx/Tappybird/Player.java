@@ -20,17 +20,21 @@ import org.mini2Dx.core.Graphics;
 import org.mini2Dx.core.collision.CollisionBox;
 import org.mini2Dx.core.graphics.Colors;
 
+import static org.mini2dx.Tappybird.Sounds.jumpSound;
 import static org.mini2dx.Tappybird.TappyBirdGame.GRAVITY;
 
 public class Player {
 
     public static float PLAYER_X = 100;
-    private static float JUMP_ACCEL = -12.0f;
+    private static float JUMP_ACCEL = -12.0f; // Default = 12.0f
+    private int jumpNum;
+    public static int walking_time;
+    public static boolean isStart=false;
 
     private float playerTextureHeight, playerTextureWidth;
     private boolean isRotating, isTesting;
 
-    private float playerY=300;
+    public static float playerY = 300; // Default = 300
     private float playerYAccel = 0.0f;
     private float playerRotation;
     private float[] playerCollisionVertices;
@@ -84,10 +88,14 @@ public class Player {
         playerTexture.playerAnimation.update(delta);
 
 
-        if (isJumping) {
+        if (isJumping && jumpNum < 2) { // Player can double jump
             settingPlayerJumping();
-        }else if(playerY>300) {
-            playerY = 300;
+            jumpNum++;
+            isStart = true;
+            jumpSound();
+        }else if(playerY>305) {
+            playerY = 296;
+            jumpNum = 0;
         }else
         {
             playerYAccel += GRAVITY;
@@ -107,15 +115,35 @@ public class Player {
         }
 
         calcPlayerYPos();
+
+        if(TappyBirdGame.inGame==true) { // The score isn't count if game haven't started
+            switch (TappyBirdGame.PILLAR_TIMING) {
+                case 100:
+                    if (walking_time % 10 == 0) { // 1 score per 10 frame
+                        TappyBirdGame.setScore(TappyBirdGame.getScore() + 1);
+                    }
+                    break;
+                case 120:
+                    if (walking_time % 8 == 0) { // 1 score per 8 frame ; faster
+                        TappyBirdGame.setScore(TappyBirdGame.getScore() + 1);
+                    }
+                    break;
+                case 150:
+                    if (walking_time % 6 == 0) { // 1 score per 6 frame ; faster
+                        TappyBirdGame.setScore(TappyBirdGame.getScore() + 1);
+                    }
+                    break;
+                case 180:
+                    if (walking_time % 4 == 0) { // 1 score per 4 frame ; omg so fast
+                        TappyBirdGame.setScore(TappyBirdGame.getScore() + 1);
+                    }
+                    break;
+            }
+        }
+        walking_time++;
     }
 
     void render(Graphics g) {
-        //TODO Give plane tilt when flying up or down.
-        if (getPlayerYAccel() > 0) {
-
-        } else if (getPlayerYAccel() > 0) {
-
-        }
 
         playerTexture.playerAnimation.setRotation(playerRotation);
         playerTexture.playerAnimation.draw(g,PLAYER_X,getPlayerY());
@@ -126,7 +154,7 @@ public class Player {
 
     }
 
-    float getPlayerY() {
+    public static float getPlayerY() {
         return playerY;
     }
 

@@ -18,10 +18,13 @@ package org.mini2dx.Tappybird;
 
 import org.mini2Dx.core.Graphics;
 
+import java.util.Random;
+
 import static org.mini2dx.Tappybird.TappyBirdGame.GAME_HEIGHT;
 import static org.mini2dx.Tappybird.TappyBirdGame.GAME_WIDTH;
 
 public class TopBottomEdge extends Hazards {
+    private static final String whichHeart = ". . .";
 
     TopBottomEdgeTexture topBottomEdgeTexture;
     private float groundTextureHeight;
@@ -34,15 +37,25 @@ public class TopBottomEdge extends Hazards {
     @Override
     void update() {
         super.update();
-        if (point.getX() < -GAME_WIDTH-1) {
-            point.setX(GAME_WIDTH-1);
+        if (point.getX() < -GAME_WIDTH-5) {
+            point.setX(GAME_WIDTH-5);
         }
     }
 
     void render(Graphics g) {
         g.drawTexture(topBottomEdgeTexture.groundTexture, point.getX(),
                 GAME_HEIGHT - topBottomEdgeTexture.groundTexture.getHeight());
-        // g.drawTexture(topBottomEdgeTexture.ceilingTexture, point.getX(), 0f);
+        TappyBirdGame tap = new TappyBirdGame();
+        g.drawTexture(topBottomEdgeTexture.gift, 850- tap.giftMove*6, tap.giftPosition);
+        //    g.drawTexture(topBottomEdgeTexture.ceilingTexture, point.getX(), 0f);
+
+    }
+
+    public void setWhichHeart(int choice, Graphics g){
+        if(choice==0) g.drawTexture(topBottomEdgeTexture.heartF,670,10);
+        else if(choice==1) g.drawTexture(topBottomEdgeTexture.heartH,670,10);
+        else g.drawTexture(topBottomEdgeTexture.heartL,670,10);
+
     }
 
 
