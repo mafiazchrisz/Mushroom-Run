@@ -22,9 +22,8 @@ import org.mini2Dx.core.game.BasicGame;
 import org.mini2Dx.core.graphics.viewport.FitViewport;
 import org.mini2Dx.core.graphics.viewport.Viewport;
 import java.util.Random;
-import static org.mini2dx.Tappybird.Sounds.playPillarPassSound;
-import static org.mini2dx.Tappybird.Sounds.jumpSound;
-import static org.mini2dx.Tappybird.Sounds.deadSound;
+
+import static org.mini2dx.Tappybird.Sounds.*;
 
 public class TappyBirdGame extends BasicGame {
     public static final String GAME_IDENTIFIER = "org.mini2Dx.TappyBird";
@@ -42,7 +41,7 @@ public class TappyBirdGame extends BasicGame {
     private static boolean IS_TESTING = false;
     private static int MAX_PILLARS = 8;
     public static int PILLAR_TIMING = 100;  //Lower will increase the frequency of pillars.
-    private static float PILLAR_Y_MIN = -100f;
+    private static float PILLAR_Y_MIN = -180f;
     private static float PILLAR_Y_MAX = -75f;
     private static float PILLAR_GAP_MIN = 175f;
     private static float PILLAR_GAP_MAX = 250f;
@@ -50,7 +49,7 @@ public class TappyBirdGame extends BasicGame {
     //Game states and player score
     public static boolean inGame, isDead, isSkillStart = false;
     private static int playerScore, highScore;
-    private int countDead, Collisionfield, choice, skillTime;
+    private int countDead, Collisionfield, choice, skillTime, numField = 9;
 
     Viewport fitViewport;
     InputHandler inputHandler;
@@ -221,18 +220,13 @@ public class TappyBirdGame extends BasicGame {
                     setHeart();
                 }
             }
-//            if (collisionRectanglesTop[i] != null) {
-//                if (player.playerCollisionBox.intersects(collisionRectanglesTop[i])) {
-//                    setHeart();
-//                }
-//            }
         }
     }
 
     public static void setScore(int score) {
         playerScore = score;
         if(getScore() % 100 == 0){
-            playPillarPassSound();
+            scoreup();
         }
     }
 
@@ -241,8 +235,8 @@ public class TappyBirdGame extends BasicGame {
     }
 
     public static void increaseSpeed(){
-        if(getScore() % 100 == 0 && getScore() != 0){ // Speed increase every 100 score of entire game
-            FLYING_SPEED += 0.1f;
+        if(getScore() % 100 == 0 && getScore() != 0 && getScore()<500){ // Speed increase every 100 score of entire game
+            FLYING_SPEED += 0.25f;
         }
     }
     public static void giftOccur(){
@@ -274,11 +268,13 @@ public class TappyBirdGame extends BasicGame {
         return new Random().nextInt() % 10 + 60;
     }
     void setHeart(){
-        if(Collisionfield==12) {
+        if(getScore() % 100 == 0 && getScore() != 0 && getScore()<500) numField--;
+
+        if(Collisionfield==numField) {
             countDead++;
             Collisionfield = 0;
             choice++;
-        }else if(countDead == 2){
+        }else if(countDead == 3){
             setDead();
             countDead = 0;
         }
@@ -290,7 +286,7 @@ public class TappyBirdGame extends BasicGame {
         FLYING_SPEED = 0f;
         GRAVITY = 0f;
         deadSound();
-        //gameSounds.playRandomExplosionSound();
+
     }
     public void skill(){
         if(giftMove==125 && (Player.getPlayerY()+40>giftPosition && Player.getPlayerY()-40<giftPosition) ) {

@@ -24,7 +24,6 @@ import static org.mini2dx.Tappybird.TappyBirdGame.GAME_HEIGHT;
 import static org.mini2dx.Tappybird.TappyBirdGame.GAME_WIDTH;
 
 public class TopBottomEdge extends Hazards {
-    private static final String whichHeart = ". . .";
 
     TopBottomEdgeTexture topBottomEdgeTexture;
     private float groundTextureHeight;
@@ -47,7 +46,7 @@ public class TopBottomEdge extends Hazards {
                 GAME_HEIGHT - topBottomEdgeTexture.groundTexture.getHeight());
         TappyBirdGame tap = new TappyBirdGame();
         g.drawTexture(topBottomEdgeTexture.gift, 850- tap.giftMove*6, tap.giftPosition);
-        //    g.drawTexture(topBottomEdgeTexture.ceilingTexture, point.getX(), 0f);
+
 
     }
 

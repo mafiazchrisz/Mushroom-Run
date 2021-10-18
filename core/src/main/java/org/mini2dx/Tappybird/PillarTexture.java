@@ -21,8 +21,6 @@ import org.mini2Dx.core.graphics.Texture;
 
 public class PillarTexture {
     private static final String PILLAR_UP_TEXTURE_LOCATION = "rock1.png";
-    // private static final String PILLAR_DOWN_TEXTURE_LOCATION = "rockDown.png";
 
     Texture pillarUp = Mdx.graphics.newTexture(Mdx.files.internal(PILLAR_UP_TEXTURE_LOCATION));
-    // Texture pillarDown = Mdx.graphics.newTexture(Mdx.files.internal(PILLAR_DOWN_TEXTURE_LOCATION));
 }

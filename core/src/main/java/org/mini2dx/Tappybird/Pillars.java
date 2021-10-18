@@ -37,7 +37,7 @@ public class Pillars extends Hazards {
     private float collisionRectHeight;
     private float collisionRectWidth = 10f;
 
-    private float[] topCollisionVertices, bottomCollisionVertices;
+    private float[] bottomCollisionVertices;
 
     CollisionBox collisionRectTop, collisionRectBottom;
 
@@ -56,13 +56,9 @@ public class Pillars extends Hazards {
         super.generateHazardAtPos(xPos, yPos);
         hazardYGap = gap;
         if (isRotating) {
-//          collisionRectTop = generatePillarCollisionRectAt(xPos + halfPillarWidth - pillarWidth / 8, yPos);
-//          collisionRectTop.setRotationAround(collisionRectTop.getCenterX(), collisionRectTop.getCenterY(), -10);
-
             collisionRectBottom = generatePillarCollisionRectAt(xPos + halfPillarWidth - pillarWidth / 8, yPos + gap + pillarHeight);
             collisionRectBottom.setRotationAround(collisionRectBottom.getCenterX(), collisionRectBottom.getCenterY(), 10);
         } else {
-//            collisionRectTop = generatePillarCollisionRectAt(xPos + halfPillarWidth + collisionRectWidth/2, yPos);
             collisionRectBottom = generatePillarCollisionRectAt(xPos + halfPillarWidth + collisionRectWidth/2, yPos + gap + pillarHeight);
 
         }
@@ -77,12 +73,9 @@ public class Pillars extends Hazards {
     void DrawPillarCollisionBoxes(Graphics g) {
         g.setColor(Colors.RED());
 
-//        topCollisionVertices = collisionRectTop.getVertices();
         bottomCollisionVertices = collisionRectBottom.getVertices();
 
         for(int i=0; i<7; i=i+2){
-//            g.drawLineSegment(topCollisionVertices[i],topCollisionVertices[i+1],
-//                    topCollisionVertices[(i+2) % 8],topCollisionVertices[(i+3) % 8]);
             g.drawLineSegment(bottomCollisionVertices[i],bottomCollisionVertices[i+1],
                     bottomCollisionVertices[(i+2) % 8],bottomCollisionVertices[(i+3) % 8]);
         }
@@ -90,22 +83,15 @@ public class Pillars extends Hazards {
 
     void update(float speed) {
         super.update();
-//        collisionRectTop.preUpdate();
         collisionRectBottom.preUpdate();
 
         if(!hasBeenCalled) {
-//            collisionRectTop.moveTowards(-100, collisionRectTop.getY(), speed);
             collisionRectBottom.moveTowards(-100, collisionRectBottom.getY(), speed);
         }
 
-//        if(!counted && getHazardXPos()<PLAYER_X){
-//            TappyBirdGame.setScore(TappyBirdGame.getScore()+1);
-//            counted = true;
-//        }
     }
 
     void render(Graphics g, boolean isTesting) {
-//        g.drawTexture(pillarTexture.pillarDown, point.getX(), point.getY());
         g.drawTexture(pillarTexture.pillarUp, point.getX(), point.getY() + pillarHeight + hazardYGap);
         if(isTesting) {
             DrawPillarCollisionBoxes(g);

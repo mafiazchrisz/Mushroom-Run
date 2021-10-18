@@ -100,7 +100,7 @@ public class UserInterface {
     }
 
     void displayGameOverMessage(Graphics g){
-        g.drawTexture(gameOverText, GAME_WIDTH/2 - gameOverText.getWidth()/2 , messageY);
+        g.drawTexture(gameOverText, GAME_WIDTH/2 - gameOverText.getWidth()/2 , 200);
     }
 
 }
