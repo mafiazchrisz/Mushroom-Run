@@ -6,6 +6,6 @@ Source : Mini2dx-TappyBird
 - Viewport rendering
 - Sprite position interpolation using CollisionBox
 - Collision detection using intersects() function
-- Sounds and Music
+- Sounds
 - Input Handling
 - Player data saved with JSON serialization
