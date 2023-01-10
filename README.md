@@ -1,4 +1,4 @@
-# mini2Dx-mushroom-run
+# mini2Dx-Mushroom Run Game
 Inspiration by Dino-chrome and implemented in mini2Dx 
 
 Source : Mini2dx-TappyBird
